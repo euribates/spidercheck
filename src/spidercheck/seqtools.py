@@ -3,7 +3,8 @@
 import itertools
 
 """
-Utilidades de uso comun para trabajar con secuencias.
+Utilidades para trabajar con secuencias.
+
 """
 
 def first(iterable, condition=lambda x: True, default=None):
@@ -56,7 +57,7 @@ def count_if(iterable, condition):
 
     Example of use:
 
-        >>> from comun.seqtools import count_if
+        >>> from .seqtools import count_if
         >>> assert count_if([1, 2, 3, 4], lambda item: item % 2 == 0) == 2
     """
     return sum(1 for item in iterable if condition(item))

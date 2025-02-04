@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Módulo ``comun.fechas``
+Módulo ``fechas``
 ------------------------------------------------------------------------
 
 funciones y utilidades para gestión de fechas.
@@ -12,13 +12,13 @@ fecha, *timestamps* (fechas y horas) y diferencias temporales.
 Constantes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autodata:: comun.fechas.EPOCH
-.. autodata:: comun.fechas.HALF_HOUR
-.. autodata:: comun.fechas.ONE_HOUR
-.. autodata:: comun.fechas.HALF_DAY
-.. autodata:: comun.fechas.ONE_DAY
-.. autodata:: comun.fechas.TWO_DAYS
-.. autodata:: comun.fechas.ONE_MONTH
+.. autodata:: .fechas.EPOCH
+.. autodata:: .fechas.HALF_HOUR
+.. autodata:: .fechas.ONE_HOUR
+.. autodata:: .fechas.HALF_DAY
+.. autodata:: .fechas.ONE_DAY
+.. autodata:: .fechas.TWO_DAYS
+.. autodata:: .fechas.ONE_MONTH
 
 
 """

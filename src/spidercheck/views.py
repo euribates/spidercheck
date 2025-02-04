@@ -7,15 +7,37 @@ from intranet.components.core import SparkLine
 from intranet.components.core import BarChart
 from intranet.auth.decorators import login_required
 from intranet.messages import add_error_message, add_success_message
-from spidercheck import breadcrumbs
-from spidercheck import core
-from spidercheck import dbraw
-from spidercheck import links
-from spidercheck import models
-from comun.web import get_page
+from . import core
+from . import dbraw
+from . import links
+from . import models
 
 
 PAGE_SIZE = 25
+
+
+def get_page(request) -> int:
+    '''Devuelve el número de página, para los listados paginados.
+
+    Espera que el número de página se haya pasado con el nombre
+    ``p`` o ``page``.
+
+    Params:
+
+        ``request`` : El objeto ``request`` pasado a la vista.
+
+    Returns:
+
+        El número de la página, si se ha indicado, o ``1`` en caso
+        contrario.
+
+    '''
+    try:
+        num_page = int(request.GET.get('p', '1'))
+        num_page = int(request.GET.get('page', num_page))
+        return num_page
+    except ValueError:
+        return 1
 
 
 def _get_links_per_site(site):
@@ -34,7 +56,6 @@ def homepage(request):
     """
     return render(request, 'spidercheck/homepage.html', {
         'titulo': "Spidercheck homepage",
-        'breadcrumbs': breadcrumbs.bc_root(),
         'sites': models.Site.get_all_sites(),
     })
 
@@ -51,7 +72,6 @@ def site_detail(request, site):
     scheduled = site.all_scheduled_pages()
     return render(request, 'spidercheck/site_detail.html', {
         'titulo': f'Site {site.name}',
-        'breadcrumbs': breadcrumbs.bc_site(site),
         'site': site,
         'num_pages': site.pages.count(),
         'num_errores': site.pages_with_errors().count(),
@@ -74,7 +94,6 @@ def site_errors(request, site):
     paginator = Paginator(errors, PAGE_SIZE)
     return render(request, 'spidercheck/site_errors.html', {
         'titulo': f'Site {site.name} - Errores',
-        'breadcrumbs': breadcrumbs.bc_errors(site),
         'site': site,
         'num_errors': errors.count(),
         'num_page': num_page,
@@ -90,7 +109,6 @@ def site_queue(request, site):
     paginator = Paginator(pages, PAGE_SIZE)
     return render(request, 'spidercheck/site_queue.html', {
         'titulo': f'Site {site.name} - Cola',
-        'breadcrumbs': breadcrumbs.bc_queue(site),
         'site': site,
         'num_page': num_page,
         'num_pages': pages.count(),
@@ -105,7 +123,6 @@ def site_last(request, site):
     paginator = Paginator(pages, PAGE_SIZE)
     return render(request, 'spidercheck/site_last.html', {
         'titulo': f'Site {site.name} - Cola',
-        'breadcrumbs': breadcrumbs.bc_last(site),
         'site': site,
         'num_page': num_page,
         'num_pages': pages.count(),
@@ -119,7 +136,6 @@ def site_no_links(request, site):
     num_pages = not_linkable_pages.count()
     return render(request, 'spidercheck/site_no_links.html', {
         'titulo': f'Páginas no enlazables {site} ({num_pages})',
-        'breadcrumbs': breadcrumbs.bc_no_links(site),
         'site': site,
         'num_pages': num_pages,
         'pages': not_linkable_pages,
@@ -131,7 +147,6 @@ def site_scheduled(request, site):
     scheduled = site.all_scheduled_pages()
     return render(request, 'spidercheck/site_scheduled.html', {
         'titulo': f'Site {site.name} - Páginas priorizadas',
-        'breadcrumbs': breadcrumbs.bc_site(site),
         'site': site,
         'scheduled': scheduled,
         'num_pages': scheduled.count(),
@@ -144,7 +159,6 @@ def site_search(request, site):
     pages = list(site.search(query)) if query else []
     return render(request, 'spidercheck/site_search.html', {
         'titulo': 'Búsqueda por patrones de URL',
-        'breadcrumbs': breadcrumbs.bc_search(site),
         'site': site,
         'query': query,
         'pages': pages,
@@ -159,7 +173,6 @@ def site_orphans(request, site):
     total_pages = len(orphans)
     return render(request, 'spidercheck/site_orphans.html', {
         'titulo': f'Páginas huérfanas en {site} ({total_pages})',
-        'breadcrumbs': breadcrumbs.bc_orphans(site),
         'site': site,
         'num_page': num_page,
         'num_pages': len(orphans),
@@ -171,7 +184,6 @@ def site_orphans(request, site):
 def detail_page(request, page):
     return render(request, 'spidercheck/detail_page.html', {
         'titulo': f'Página {page.id_page} de {page.site.name}',
-        'breadcrumbs': breadcrumbs.bc_page(page),
         'page': page,
     })
 

@@ -6,6 +6,11 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path('..').resolve()))
+
 project = 'Spidercheck'
 copyright = '2025, Juan Ignacio Rodríguez de León (M.D.)'
 author = 'Juan Ignacio Rodríguez de León (M.D.)'
@@ -34,5 +39,5 @@ todo_include_todos = True
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = 'furo'
 html_static_path = ['_static']

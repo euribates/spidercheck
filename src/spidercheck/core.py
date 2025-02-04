@@ -8,15 +8,13 @@ import sys
 
 import requests
 
-from comun.fechas import just_now
-from comun.results import Success, Failure
-
-from spidercheck.models import Page
-from spidercheck.models import Site
-from spidercheck.models import Value
-from spidercheck.plugins import registry
-
-from . import webparser
+from .fechas import just_now
+from .models import Page
+from .models import Site
+from .models import Value
+from .plugins import registry
+from .results import Success, Failure
+from .webparser import is_valid_html
 
 
 _logger = logging.getLogger(__name__)
@@ -151,7 +149,7 @@ def check_page(page) -> Union[Success, Failure]:
         is_local = page.site.is_local(response.url)
         if is_local:
             headers, body = get_text_from_url(url)
-            if webparser.is_valid_html(body):
+            if is_valid_html(body):
                 deleted_links, added_links = _update_links(page, body)
                 plugins_phase = _run_plugins(page, headers, body)
                 return Success(

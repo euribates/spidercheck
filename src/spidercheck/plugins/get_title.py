@@ -37,7 +37,7 @@ este ejemplo, pero aun así, la función debe aceptarlos.
 
 from bs4 import BeautifulSoup
 
-from comun.seqtools import first
+from spidercheck.seqtools import first
 
 
 def process(_page, _headers, body):

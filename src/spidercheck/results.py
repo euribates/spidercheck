@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Módulo ``comun.results``
+Módulo ``results``
 ------------------------------------------------------------------------
 
 Una implementación supersencilla de las monadas de resultado.  Se
