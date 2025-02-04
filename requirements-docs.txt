@@ -1,0 +1,4 @@
+sphinx
+sphinx-copybutton
+sphinxcontrib-mermaid
+furo
