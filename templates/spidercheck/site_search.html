@@ -1,0 +1,48 @@
+{% extends "spidercheck/base.html" %}{% load comun_filters %}
+
+{% block content %}
+
+{% include "spidercheck/includes/site_header.html" with site=site %}
+{% include "spidercheck/includes/site_nav.html" with site=site %}
+    
+<h2 class="h3 display-3">Búsquedas</h2>
+
+<div class="box">
+<form action="." method="get">
+    <input name="q" type="search" value="{{ query }}" placeholder="URL...">
+    <input type="submit" name="ok" value="buscar">
+</form>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+        <th>Id. página</th>
+        <th>URL / Título</th>
+        <th>Checked</th>
+        <th>Status code</th>
+        <th>Python version</th>
+        <th>Recheck</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for page in pages %}<tr>
+        <th>
+            {% include "spidercheck/includes/pb_view_page.html" with page=page %}
+        </th>
+        <td>
+          <tt><b>{{ page.get_relative_url }}</b></tt><br>
+          <i>{{ page.get_title }}</i>
+        </td>
+        <td>{{ page.is_checked|as_boolean }}</td>
+        <td>{{ page.status }}</td>
+        <th>{{ page.get_version|safe }}</th>
+        <th>
+            {% include "spidercheck/includes/pb_check_page.html" with page=page %}
+        </th>
+    </tr>{% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock content %}

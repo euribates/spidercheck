@@ -1,0 +1,35 @@
+{% extends "spidercheck/base.html" %}{% load comun_filters %}
+
+{% block content %}
+    
+{% include "spidercheck/includes/site_header.html" with site=site %}
+{% include "spidercheck/includes/site_nav.html" with site=site active='scheduled' %}
+
+<h2 class="h3 display-3">Páginas priorizadas <b class="badge">{{ num_pages }}</b></h2>
+
+<table class="table table-striped">
+<thead>
+<tr>
+    <th>Id. página</th>
+    <th>URL / Título</th>
+    <th>Rotación</th>
+    <th>Próximo chequeo</th>
+    
+</tr>
+</thead>
+<tbody>
+    {% for sc in scheduled %}<tr>
+        <th>
+            {% include "spidercheck/includes/pb_view_page.html" with page=sc.page %}
+        </th>
+        <td>
+            <b><tt>{{ sc.page.get_relative_url }}</tt></b><br>
+            <i>{{ sc.page.get_title }}</i>
+        </td>
+        <td>{{ sc.rotation }}</td>
+        <td>{{ sc.watermark }}</td>
+    </tr>{% endfor %}
+</tbody>
+</table>
+
+{% endblock content %}

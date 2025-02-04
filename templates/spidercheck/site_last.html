@@ -1,0 +1,65 @@
+{% extends "spidercheck/base.html" %}{% load comun_filters plazos %}
+
+{% block content %}
+    
+{% include "spidercheck/includes/site_header.html" with site=site %}
+{% include "spidercheck/includes/site_nav.html" with site=site active='last' %}
+
+
+<h2 class="h3 display-3">
+    Últimas páginas procesadas
+</h2>
+<h3 class="h4">
+    Página {{ num_page }} / {{ page.paginator.num_pages }}
+</h3>
+
+
+{% if page.object_list %}
+  {% include "includes/paginator.html" %}
+  <table class="table">
+  <thead>
+      <tr>
+          <th>Id. page</th>
+          <th>URL / Título</th>
+          <th>Size</th>
+          <th>Content type</th> 
+          <th>Python version</th>
+          <th>Status</th>
+          <th>Checked at</th>
+          <th>Rechecked</th>
+          <th>
+      </tr>
+  </thead>
+  {% for p in page.object_list %}<tr>
+      <th> {% include "spidercheck/includes/pb_view_page.html" with page=p %} </th>
+      <th>
+          <tt><b>{{ p.get_relative_url }}</b></tt><br>
+          <i>{{ p.get_title }}</i>
+      </th>
+      <th>{{ p.size_bytes|as_filesize }}</th>
+      <th>{{ p.content_type }}</th>
+      <th>{{ p.get_version|safe }}</td>
+      <td>{{ p.is_ok|as_boolean }}</td>
+      <td>
+          <span class="timestamp" title="{{ p.checked_at|as_fecha_hora }}">
+              Hace {{ p.checked_at|en_pasado }}
+            </span>
+      </td>
+      <td>
+          {% include "spidercheck/includes/pb_check_page.html" with page=p %}
+      </td>
+  </tr>{% endfor %}
+  </table>
+{% else %}
+  <div class="box">
+    <p class="alert alert-success">
+      No se han detectado errores
+      por el momento
+    </p>
+  </div>
+{% endif %}
+
+
+
+
+{% endblock content %}

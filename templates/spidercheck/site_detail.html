@@ -1,0 +1,89 @@
+{% extends "spidercheck/base.html" %}{% load static comun_filters cards %}
+
+{% block content %}
+    
+
+{{ sparkline }}
+
+{% include "spidercheck/includes/site_header.html" with site=site %}
+{% include "spidercheck/includes/site_nav.html" with site=site %}
+
+<div class="row">
+
+    <div class="col-sm-3">
+        {% card 'Errores' url=links.a_site_errors %}
+        <p class="big-number">
+        <a href="{{ links.a_site_errors }}">
+        {{ num_errores }}
+        </a>
+        </p>
+        {% endcard %}
+    </div>
+
+    <div class="col-sm-3">
+        {% card 'Encontradas' url=links.a_site_last %}
+        <p class="big-number">
+        <a href="{{ links.a_site_last }}">
+        {{ num_pages }}
+        </a>
+        </p>
+        {% endcard %}
+    </div>
+
+    <div class="col-sm-3">
+        {% card 'No enlazables' url=links.a_site_no_links %}
+        <p class="big-number">
+        <a href="{{ links.a_site_no_links }}">
+        {{ num_no_links }}
+        </a>
+        </p>
+        {% endcard %}
+    </div>
+    
+    <div class="col-sm-3">
+        {% card 'Priorizadas' url=links.a_site_scheduled number=num_scheduled %}
+        <p class="big-number">
+        <a href="{{ links.a_site_scheduled }}">
+           {{ num_scheduled }}
+        </a>
+        </p>
+        {% endcard %}
+    </div>
+
+    <div class="col-sm-4">
+        {% card 'En cola' url=links.a_site_queue %}
+        <div style="text-align: center">
+        <img src="/intranet/pie/percent/{{ num_queued }}/{{ num_pages }}.svg"
+             width="256"
+             height="256"
+             alt="En cola: {{ num_queued }}">
+
+        <p class="small-number">{{ num_queued }}</p>
+        </div>
+        {% endcard %}
+    </div>
+    
+    <div class="col-sm-4">
+        {% card 'Procesadas' url=links.a_site_last %}
+
+        <div style="text-align: center">
+        <img src="/intranet/pie/percent/{{ num_processed }}/{{ num_pages }}.svg"
+             width="256"
+             height="256"
+             alt="Porcesadas: {{ num_processed }}">
+
+        <p class="small-number">{{ num_processed }}/{{ num_pages }}</p>
+        </div>
+        {% endcard %}
+    </div>
+
+    <div class="col-sm-4">
+        {% card 'Versiones' %}
+        {{ versiones }}
+        {% endcard %}
+    </div>
+
+
+</div>
+
+{% endblock content %}

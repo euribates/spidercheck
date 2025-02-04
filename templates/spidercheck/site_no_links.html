@@ -1,0 +1,29 @@
+{% extends "spidercheck/base.html" %}{% load comun_filters %}
+
+{% block content %}
+    
+{% include "spidercheck/includes/site_header.html" with site=site %}
+{% include "spidercheck/includes/site_nav.html" with site=site active='no_links' %}
+
+<h2 class="h3">Páginas no enlazables <badge>{{ num_pages }}</badge></h2>
+
+    
+<table class="table table-striped">
+<thead>
+<tr>
+    <th>Id. página</th>
+    <th>URL</th>
+</tr>
+</thead>
+<tbody>
+    {% for page in pages %}<tr>
+        <th>
+            {% include "spidercheck/includes/pb_view_page.html" with page=page %}
+        </th>
+        <td><tt>{{ page.subpath }}</tt></td>
+    </tr>{% endfor %}
+</tbody>
+</table>
+
+
+{% endblock content %}

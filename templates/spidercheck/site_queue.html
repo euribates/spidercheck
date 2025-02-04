@@ -1,0 +1,60 @@
+{% extends "spidercheck/base.html" %}
+{% load comun_filters buttons humanize plazos %}
+
+{% block content %}
+
+{% include "spidercheck/includes/site_header.html" with site=site %}
+{% include "spidercheck/includes/site_nav.html" with site=site active='queue' %}
+    
+<h2 class="h2 display-2">
+    Páginas en Cola <span class="badge">{{ num_pages }}</span>
+</h2>
+<h3 class="h4">
+    Página {{ num_page }} / {{ page.paginator.num_pages }}
+</h3>
+
+{% if page.object_list %}
+  {% include "includes/paginator.html" %}
+  <table class="table">
+  
+  <thead>
+    <tr>
+      <th>Id. pag.</th>
+      <th>URL</th>
+      <th>Waiting time</th>
+      <th>Status Code</th>
+      <th>Check</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for p in page.object_list %}<tr>
+          <th> {% include "spidercheck/includes/pb_view_page.html" with page=p %} </th>
+          <td><tt>{{ p.get_relative_url }}</tt></td>
+          <td>{{ p.waiting_time|delta_aproximado }}</td>
+          <td>
+              {% if p.status %}
+                {{ p.status }}
+              {% else %}
+                N/A
+              {% endif %}
+          </td>
+          <td>
+          {% include "spidercheck/includes/pb_check_page.html" with page=p %}
+          </td>
+      </tr>{% endfor %}
+  </tbody>
+  </table>
+  {% include "includes/paginator.html" %}
+
+{% else %}
+
+  <div class="box">
+    <p class="alert alert-success">
+      No hay ninguna página en la cola
+      por el momento
+    </p>
+  </div>
+
+{% endif %}
+
+{% endblock content %}

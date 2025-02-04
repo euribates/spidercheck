@@ -1,0 +1,58 @@
+{% extends "spidercheck/base.html" %}
+{% load comun_filters buttons %}
+
+{% block content %}
+    
+{% include "spidercheck/includes/site_header.html" with site=site %}
+
+{% include "spidercheck/includes/site_nav.html" with site=site active='errors' %}
+
+
+<h2 class="h3 display-3">
+    Errores <span class="badge">{{ num_errors }}</span>
+</h2>
+<h3 class="h4">
+    Página {{ num_page }} / {{ page.paginator.num_pages }}
+</h3>
+
+
+{% if page.object_list %}
+  {% include "includes/paginator.html" %}
+  <table class="table">
+  <thead>
+      <tr>
+          <th>Id. page</th>
+          <th>URL</th>
+          <th>Status</th>
+          <th>Error meesage</th>
+          <th>Checked at</th>
+          <th>Force Check</th>
+      </tr>
+  </thead>
+  <tbody>
+      {% for p in page.object_list %}<tr>
+          <td>{% include "spidercheck/includes/pb_view_page.html" with page=p %} </td>
+          <td><tt>{{ p.get_relative_url }}</tt>
+              <br> {{ p.get_full_url }}
+              </td>
+          <td>{{ p.status }}</td>
+          <td>{{ p.error_message }}</td>
+          <td>{{ p.checked_at|default:"N/A" }}</td>
+          <td>
+              {% include "spidercheck/includes/pb_check_page.html" with page=p %}
+          </td>
+      </tr>{% endfor %}
+  </tbody>
+  </table>
+  {% include "includes/paginator.html" %}
+{% else %}
+  <div class="box">
+    <p class="alert alert-success">
+      No se han detectado errores
+      por el momento
+    </p>
+  </div>
+{% endif %}
+
+
+{% endblock content %}

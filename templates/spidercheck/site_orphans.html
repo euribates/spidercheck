@@ -1,0 +1,102 @@
+{% extends "spidercheck/base.html" %}
+{% load comun_filters buttons %}
+
+{% block javascript %}
+{{ block.super }}
+
+<script>
+jQuery(document).ready(function() {
+    console.log('site_orphnas starts');
+    jQuery('#pb_select_all').css({'border': '2px solid red'});
+    console.log(jQuery('#pb_select_all'));
+        jQuery('#pb_select_all').click(function (event) {
+            let newStatus = jQuery(event.target).prop('checked');
+            jQuery('input[name=id_pages]').prop('checked', newStatus);
+            });
+    });
+</script>
+    
+{% endblock javascript %}
+
+{% block content %}
+    
+{% include "spidercheck/includes/site_header.html" with site=site %}
+{% include "spidercheck/includes/site_nav.html" with site=site active='orphans' %}
+
+<form action="{% url 'intranet:spidercheck:site_expunge' site=site %}" method="post">
+{% csrf_token %}
+<div class="controles">
+    <div class="left">
+        <input type="checkbox" class="btn btn-warning" id="pb_select_all">
+        &nbsp;
+        <label for="pb_select_all">
+            Seleccionar todo
+        </label>
+        </button>
+    </div>
+    <div class="right">
+        <button class="btn btn-danger" type="submit" name="pb_ok">
+            {% fa_delete %} Borrar enlaces seleccionados
+        </button>
+    </div>
+</div>
+
+{% include "includes/paginator.html" %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id. page</th>
+            <th>URL</th>
+            <th>Size</th>
+            <th>Content type</th> 
+            <th>Checked at</th>
+            <th>Rechecked</th>
+            <th>
+        </tr>
+    </thead>
+    {% for p in page.object_list %}<tr>
+        <th>
+
+            <input type="checkbox" 
+                   name='id_pages' value="{{ p.pk }}"
+                   id="chk_id_page_{{ p.pk }}">
+            {% include "spidercheck/includes/pb_view_page.html" with page=p %} </th>
+
+        <th><tt>{{ p.get_relative_url }}</tt></th>
+        <th>{{ p.size_bytes|as_filesize }}</th>
+        <th>{{ p.content_type }}</th>
+        <td>{{ p.is_ok|as_boolean }}
+            {{ p.checked_at|as_fecha_hora }}</td>
+        <td>
+            {% include "spidercheck/includes/pb_check_page.html" with page=p %}
+        </td>
+    </tr>{% endfor %}
+</table>
+
+<div class="controles">
+    <div class="left"></div>
+    <div class="right">
+        <input type="submit" name="pb_ok" value="Borrar enlaces seleccionados">
+    </div>
+</div>
+
+</form>
+
+<section class="well bg-danger">
+<h2 class="h2">Danger zone</h2>
+
+<form action="{% url 'intranet:spidercheck:site_expunge_all' site=site %}" method="post">
+{% csrf_token %}
+<div class="controles">
+    <div class="left"></div>
+    <div class="center">
+        <button class="btn btn-danger" type="submit" name="pb_ok">
+            {% fa_purge %} Borrar <b>Todas las páginas huérfanas
+        </button>
+    </div>
+</div>
+</form>
+</section>
+
+{% endblock content %}

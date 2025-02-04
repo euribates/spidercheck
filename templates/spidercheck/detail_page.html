@@ -1,0 +1,124 @@
+{% extends "spidercheck/base.html" %}{% load comun_filters cards %}
+
+{% block content %}
+    
+<div class="row">
+
+  <div class="col-xs-12 col-sm-8">
+
+    {% table_card 'Datos de la página' %}
+
+    <tr>
+        <th>Id. página</th>
+        <td colspan="2">{{ page.pk }}</td>
+    </tr>
+    <tr>
+        <th>Site</th>
+        <td colspan="2">{{ page.site.name }}</td>
+    </tr>
+    <tr>
+        <th>URL</th>
+        <td colspan="2"><a href="{{ page.get_full_url }}"><tt>
+            {{ page.get_full_url }}
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <th>Título</th>
+        <td>
+            {{ page.get_title|default:'N/A' }}
+        </td>
+    </tr>
+
+    <tr>
+        <th>Status</th>
+        <td>{{ page.is_ok|as_boolean }}</td>
+        <td><tt class="badge">{{ page.status }}</tt></td>
+    </tr>
+    <tr>
+        <th>Priorizada</th>
+        <td>{{ page.is_scheduled|as_boolean }}
+        </td>
+        <td>
+            {% if page.is_scheduled %}
+            <b class="badge">{{ page.get_scheduled_rotation }}</b>
+            {% endif %}
+        </td>
+
+    </tr>
+    <tr>
+        <th>Checked</th>
+        <td>{{ page.is_checked|as_boolean }}
+            {% if page.is_checked and page.checked_at %}
+            {{ page.checked_at|as_fecha_hora }}
+            {% endif %}
+        </td>
+        <td>{% include "spidercheck/includes/pb_check_page.html" with page=page %}
+        </td>
+    </tr>
+
+    <tr>
+        <tr>
+            <th>Tiempo de proceso</th>
+            <td>{{ page.check_time }} (En s.)</td>
+        </tr>
+    </tr>
+
+    <tr>
+        <th>Linkable</th>
+        <td> {{ page.is_linkable|as_boolean }} </td>
+        <td>
+            {% include "spidercheck/includes/pb_toogle_is_linkable.html"  with page=page %}
+        </td>
+    </tr>
+
+    <tr>
+        <th>Enlaces (In/Out)</th>
+        <td>{{ page.incoming_links.count }} / {{ page.outgoing_links.count }}</td>
+        <td>
+            {% include "spidercheck/includes/pb_delete_page.html"  with page=page %}
+        </td>
+    </tr>
+
+    {% endcard %}
+
+
+  </div>
+    
+  <div class="col-xs-12 col-sm-4">
+    {% table_card 'Valores' %}
+        {% for v in page.values.all %}<tr>
+            <th>{{ v.name }}</th>
+            <td>{{ v.value }}</td>
+        </tr>{% endfor %}
+    {% endcard %}
+</div>
+
+<div class="col-xs-12 col-sm-6">
+    {% table_card 'Enlazan a esta página' counter=page.incoming_links.count %}
+    {% for link in page.incoming_links.all|slice:"0:75" %}<tr>
+    <th>
+      {% include "spidercheck/includes/pb_view_page.html" with page=link.from_page %}
+    </th>
+    <th><tt>{{ link.from_page.get_relative_url }}</tt></th>
+    <th>{{ link.from_page.is_checked|as_boolean }}</th>
+    </tr>{% endfor %}
+    {% endcard %}
+</div>
+
+<div class="col-xs-12 col-sm-6">
+    {% table_card 'Esta página enlaza a' counter=page.outgoing_links.count %}
+    {% for link in page.outgoing_links.all|slice:"0:75" %}<tr>
+    <th>
+      {% include "spidercheck/includes/pb_view_page.html" with page=link.to_page %}
+    </th>
+    <th><tt>{{ link.to_page.get_relative_url }}</tt></th>
+    <th>{{ link.to_page.is_checked|as_boolean }}</th>
+    </tr>{% endfor %}
+    {% endcard %}
+
+</div>
+
+</div>
+{% endblock content %}

@@ -1,0 +1,37 @@
+{% extends "spidercheck/base.html" %}{% load comun_filters %}
+
+
+{% block content %}
+    
+<table class="table">
+    
+<thead>
+    <tr>
+        <th>Id.</th>
+        <th>Nombre (URL)</th>
+        <th>Nº de páginas descubiertas/pendientes</th>
+        <th>Progreso</th>
+    </tr>
+</thead>
+
+{% for site in sites %}<tr>
+    <th>
+       <a class="btn btn-info" role="button"
+	      href="{% url 'intranet:spider:site_detail' site=site %}">
+        {{ site.pk }}
+       </a>
+    </th>
+    <td>
+      <b>{{ site.name }}</b>
+      <small><tt>
+        (<a href="{{ site.url }}">{{ site.url }}</a>)
+      </tt><small>
+    </td>
+    <td>{{ site.pages.all.count }} / {{ site.all_queued_pages.count }} </td>
+    <td><progress value="{{ site.progress|as_float }}" max="100"></progress>
+        {{ site.progress }}%</td>
+</tr>{% endfor %}
+
+</table>
+
+{% endblock content %}
