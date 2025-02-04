@@ -1,0 +1,18 @@
+{% load buttons %}
+{% if page.can_be_deleted %}
+  <form action="{% url 'intranet:spidercheck:page_delete' page=page %}" method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger" role="button" href="">
+      {% fa_delete %}
+      Borrar página
+  </button>
+  </form>
+{% else %}
+  <button type="submit" class="btn btn-danger btn-disabled" role="button" href="#" disabled>
+      {% fa_delete %}
+      Borrar página
+  </button>
+{% endif %}
+
+
+

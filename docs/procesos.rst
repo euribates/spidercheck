@@ -32,4 +32,4 @@ Inicialización de un *Site*
 A partir de un nombre y una *url* semilla, la función para crear un
 nuevo site está en ``core.init_site``.
 
-.. autofunction:: core.init_size
+.. autofunction:: .core::init_size

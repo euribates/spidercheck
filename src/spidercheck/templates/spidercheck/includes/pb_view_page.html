@@ -1,0 +1,7 @@
+{% load buttons %}
+<a class="btn btn-info"
+   href="{% url 'intranet:spider:detail_page' page=page %}"
+   role="button">
+   {% fa_page %} {{ page.id_page }}
+</a>
+

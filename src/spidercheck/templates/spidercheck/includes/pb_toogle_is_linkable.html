@@ -1,0 +1,13 @@
+{% load buttons %}
+<a class="btn btn-warning" role="button"
+   href="{% url 'intranet:spidercheck:toogle_is_linkable' page=page %}">
+    {% if page.is_linkable %}
+        {% fa_nolink %}
+        Marcar como <b>no</b> enlazable
+    {% else %}
+        {% fa_link %}
+        Marcar como enlazable
+    {% endif %}
+</a>
+
+

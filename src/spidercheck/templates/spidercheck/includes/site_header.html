@@ -1,0 +1,30 @@
+{% load comun_filters %}
+<table class="table">
+<tbody>
+    <tr>
+        <th>Nombre/Url</th>
+        <th style="text-align: right">Indexadas/Pendientes</th>
+        <th style="text-align: right">Restantes</th>
+        <th style="text-align: right">Progreso</th>
+    </tr>
+    <tr>
+        <td>
+            <b>{{ site.name }}</b> &lt;<tt>{{ site.url }}</tt>&gt;
+        </td>
+
+        <td style="text-align: right">
+            {{ site.all_queued_pages.count }} de {{ site.pages.all.count }}
+        </td>
+
+        <td style="text-align: right">
+            {{  site.all_pending_pages.count }}
+        </td>
+
+        <td style="text-align: right">
+            {{ site.progress|as_float }}%
+            <progress value="{{ site.progress|as_float }}" max="100"></progress>
+        </td>
+    </tr>
+</tbody>
+</table>
+

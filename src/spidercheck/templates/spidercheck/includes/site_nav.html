@@ -1,0 +1,48 @@
+
+<ul class="nav nav-tabs">
+
+    {% if active == 'errors' %}
+        <li class="active"><a href="#">Errores</a></li>
+    {% else %}
+    <li><a href="{% url 'intranet:spider:site_errors' site=site %}">Errores</a></li>
+    {% endif %}
+
+    {% if active == 'queue' %}
+        <li class="active"><a href="#">Cola</a></li>
+    {% else %}
+        <li><a href="{% url 'intranet:spider:site_queue' site=site %}">Cola</a>
+    {% endif %}
+
+    {% if active == 'last' %}
+        <li class="active"><a href="#">Últimas páginas analizadas</a></li>
+    {% else %}
+        <li><a href="{% url 'intranet:spider:site_last' site=site %}">Últimas páginas analizadas</a></li>
+    {% endif %}
+
+    {% if active == 'no_links' %}
+      <li class="active"><a href="#">
+    {% else %}
+      <li><a href="{% url 'intranet:spider:site_no_links' site=site %}">
+    {% endif %}
+      Rutas no enlazadas
+      </a></li>
+
+    {% if active == 'orphans' %}
+        <li class="active"><a href="#">Huérfanas</a></li>
+    {% else %}
+        <li><a href="{% url 'intranet:spider:site_orphans' site=site %}">
+            Páginas huérfanas
+            </a></li>
+    {% endif %}
+
+    {% if active == 'scheduled' %}
+        <li class="active"><a href="#">Priorizadas</a></li>
+    {% else %}
+        <li><a href="{% url 'intranet:spider:site_scheduled' site=site %}">
+            Priorizadas
+            </a></li>
+    {% endif %}
+
+
+<li><a href="{% url 'intranet:spider:site_search' site=site %}">Búsquedas</a></li>
+</ul>
