@@ -173,6 +173,21 @@ def check_page(page) -> Union[Success, Failure]:
 
 def init_site(url, name="default"):
     """Crea un nuevo site con el nombre y url indicado.
+
+    Puede elevar la excepción ``ValueError`` si la pasamos el nombre
+    de un *site* que ya existe en la base de datos. Crea una instancia
+    de ``Page`` vinculada con este *site* que será la frontera inicial.
+
+    Params:
+
+        - url (str): La *URL* semilla.
+
+        - name (str): El nombre que queremos asignarle al site.
+
+    Returns:
+
+        Una instancia de ``Site``.
+
     """
     _logger.info("Creating site %s for URL %s", name, url)
     if Site.load_site_by_name(name):
