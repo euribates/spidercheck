@@ -3,13 +3,13 @@
 from typing import Union
 import time
 from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 import logging
 import sys
 
-import requests
-
 from .fechas import just_now
 from .models import Page
+from .models import Link
 from .models import Site
 from .models import Value
 from .plugins import registry
@@ -20,16 +20,17 @@ from .webparser import is_valid_html
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.WARNING)
 _logger.handlers.append(logging.StreamHandler(sys.stderr))
-logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
 def get_text_from_url(url):
     try:
-        req = requests.get(url, allow_redirects=True)
-        if 'content-length' not in req.headers:
-            req.headers['content-length'] = len(req.text)
-        return req.headers, req.text
+        request = Request(method="GET", url=url)
+        with urlopen(request) as req:
+            text = req.read().decode('utf-8')
+            if 'content-length' not in req.headers:
+                req.headers['content-length'] = len(text)
+            return req.headers, text
     except IOError as err:
         return False, 503, f"Conexion error: {err}", {}
 
@@ -93,16 +94,16 @@ def _update_links(page, body):
     before_links = {p.to_page.pk for p in page.outgoing_links.all()}
     after_links = set({})
     for new_url in page.get_all_valid_links(body):
-        target_page, created = self.site.add_page(new_url)
+        target_page, created = page.site.add_page(new_url)
         if target_page.is_linkable:
-            Link.objects.get_or_create(from_page=self, to_page=target_page)
+            Link.objects.get_or_create(from_page=page, to_page=target_page)
             after_links.add(target_page.pk)
     to_remove_links = before_links - after_links
     to_add_links = after_links - before_links
     if to_remove_links:
         qset = (
             Link.objects
-            .filter(from_page=self)
+            .filter(from_page=page)
             .filter(to_page__in=to_remove_links)
             )
         qset.delete()

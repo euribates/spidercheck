@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 from datetime import timedelta as TimeDelta
-from typing import Union, Self, Optional, Iterator
+from typing import Union, Self, Optional, Iterator, Iterable
 from urllib.parse import urlunparse, urlparse, urljoin
 from urllib.robotparser import RobotFileParser
+from urllib.request import Request, urlopen
+
 import functools
 import logging
 import random
@@ -13,7 +15,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Count
 from django.db.models.functions import Now
-import requests
 
 import fechas
 from results import Success, Failure
@@ -441,22 +442,20 @@ class Page(models.Model):
         """
         url = self.get_full_url()
         status_code = -1
+        headers={'Accept-Encoding': 'identity'}
+        request = Request(method='HEAD', url=url, headers=headers)
         try:
-            req = requests.head(
-                url,
-                allow_redirects=True,
-                headers={'Accept-Encoding': 'identity'},
-                )
-            status_code = req.status_code
-            req.raise_for_status()
-            return Success(req)
-        except requests.exceptions.HTTPError as err:
+            with urlopen(request) as req:
+                if 200 <= req.status < 300:
+                    return Success()
+                return Failure('El servidor devuelve un código de error {req.status}')
+        except Exception as err:
             return Failure(str(err), code=status_code)
 
     def __str__(self) -> str:
         return self.get_full_url()
 
-    def waiting_time(self) -> DeltaTime:
+    def waiting_time(self) -> TimeDelta:
         """Devuelve el lapso de tiempo desde la última comprobación.
         
         Se utiliza para priorizar la frontera. Normalmente se comprueba
