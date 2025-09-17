@@ -1,0 +1,8 @@
+LICENSE
+README.md
+setup.cfg
+setup.py
+src/Spidercheck.egg-info/PKG-INFO
+src/Spidercheck.egg-info/SOURCES.txt
+src/Spidercheck.egg-info/dependency_links.txt
+src/Spidercheck.egg-info/top_level.txt
