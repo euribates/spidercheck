@@ -19,7 +19,6 @@ setup(
     url='https://github.com/euribates/spidercheck',
     keywords='web spider django check quality',
     install_requires=[
-          'scikit-learn',
       ],
 
 )
